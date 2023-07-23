@@ -43,8 +43,12 @@ nnoremap <leader>fd <cmd>Telescope lsp_definitions<cr>
 colorscheme catppuccin-mocha
 
 lua << EOF
+
+require('telescope').setup{ defaults = { file_ignore_patterns = {"node_modules"} } }
+
 local lspconfig = require('lspconfig')
 lspconfig.tsserver.setup {}
+require'lspconfig'.angularls.setup{}
 
 local cmp = require'cmp'
 
