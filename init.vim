@@ -30,6 +30,8 @@ call plug#end()
 "   syntax off            " Disable syntax highlighting
 filetype indent on
 syntax on
+set autowrite
+set autowriteall
 
 nnoremap <leader>ff <cmd>Telescope find_files<cr>
 nnoremap <leader>fg <cmd>Telescope live_grep<cr>
