@@ -14,6 +14,8 @@ Plug 'hrsh7th/nvim-cmp'
 
 Plug 'preservim/nerdtree'
 
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+
 call plug#end()
 
 " END PLUGIN
