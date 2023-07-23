@@ -16,6 +16,9 @@ Plug 'preservim/nerdtree'
 
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 
+Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.2' }
+
 call plug#end()
 
 " END PLUGIN
