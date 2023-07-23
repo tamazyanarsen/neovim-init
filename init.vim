@@ -29,6 +29,11 @@ call plug#end()
 filetype indent on
 syntax on
 
+nnoremap <leader>ff <cmd>Telescope find_files<cr>
+nnoremap <leader>fg <cmd>Telescope live_grep<cr>
+nnoremap <leader>fb <cmd>Telescope buffers<cr>
+nnoremap <leader>fh <cmd>Telescope help_tags<cr>
+
 lua << EOF
 local lspconfig = require('lspconfig')
 lspconfig.tsserver.setup {}
@@ -100,5 +105,6 @@ local cmp = require'cmp'
   require('lspconfig')['tsserver'].setup {
     capabilities = capabilities
   }
+
 
 EOF
