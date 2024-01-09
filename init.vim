@@ -48,6 +48,8 @@ nnoremap <leader>fd <cmd>Telescope lsp_definitions<cr>
 nnoremap H gT
 nnoremap L gt
 
+nmap <F6> :NERDTreeToggle<CR>
+
 colorscheme catppuccin-mocha
 
 let g:ale_fix_on_save = 1
