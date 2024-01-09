@@ -22,6 +22,8 @@ Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.2' }
 
 Plug 'catppuccin/nvim', { 'as': 'catppuccin' }
 
+Plug 'dense-analysis/ale'
+
 call plug#end()
 
 " END PLUGIN
@@ -47,6 +49,24 @@ nnoremap H gT
 nnoremap L gt
 
 colorscheme catppuccin-mocha
+
+let g:ale_fix_on_save = 1
+let g:ale_sign_error = '>>'
+let g:ale_sign_warning = '--'
+let g:ale_echo_msg_error_str = 'E'
+let g:ale_echo_msg_warning_str = 'W'
+let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
+let g:ale_python_flake8_options = '--max-line-length 88 --extend-ignore=E203'
+
+let g:ale_linters = {
+    \ 'javascript': ['prettier', 'eslint'],
+	\ 'typescript': ['prettier', 'eslint'],
+	\}
+
+let g:ale_fixers = {
+  \ 'javascript': ['prettier', 'eslint'],
+  \ 'typescript': ['prettier', 'eslint'],
+\}
 
 lua << EOF
 
