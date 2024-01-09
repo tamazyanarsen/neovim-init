@@ -24,6 +24,8 @@ Plug 'catppuccin/nvim', { 'as': 'catppuccin' }
 
 Plug 'dense-analysis/ale'
 
+Plug 'https://github.com/tpope/vim-fugitive.git'
+
 call plug#end()
 
 " END PLUGIN
@@ -69,6 +71,8 @@ let g:ale_fixers = {
   \ 'javascript': ['prettier', 'eslint'],
   \ 'typescript': ['prettier', 'eslint'],
 \}
+
+let g:NERDTreeWinSize=60
 
 lua << EOF
 
