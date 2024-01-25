@@ -39,6 +39,7 @@ set autowrite
 set autowriteall
 set tabstop=4
 set shiftwidth=4
+set number
 
 nnoremap <leader>ff <cmd>Telescope find_files<cr>
 nnoremap <leader>fg <cmd>Telescope live_grep<cr>
@@ -46,6 +47,13 @@ nnoremap <leader>fb <cmd>Telescope buffers<cr>
 nnoremap <leader>fh <cmd>Telescope help_tags<cr>
 nnoremap <leader>fr <cmd>Telescope lsp_references<cr>
 nnoremap <leader>fd <cmd>Telescope lsp_definitions<cr>
+
+nnoremap mn <cmd>Telescope lsp_definitions<cr><cmd>lua vim.lsp.buf.rename()<cr>
+
+" For local replace
+nnoremap gr gd[{V%::s/<C-R>///gc<left><left><left>
+" For global replace
+nnoremap gR gD:%s/<C-R>///gc<left><left><left>
 
 nnoremap H gT
 nnoremap L gt
