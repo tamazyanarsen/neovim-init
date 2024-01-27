@@ -2,32 +2,9 @@
 
 call plug#begin()
 
-Plug 'hrsh7th/vim-vsnip'
-Plug 'hrsh7th/vim-vsnip-integ'
-
-Plug 'quick-lint/quick-lint-js', {'rtp': 'plugin/vim/quick-lint-js.vim', 'tag': '2.15.0'}
-
-Plug 'neovim/nvim-lspconfig'
-
-Plug 'hrsh7th/cmp-nvim-lsp'
-Plug 'hrsh7th/cmp-buffer'
-Plug 'hrsh7th/cmp-path'
-Plug 'hrsh7th/cmp-cmdline'
-Plug 'hrsh7th/nvim-cmp'
-
 Plug 'preservim/nerdtree'
-
-Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-Plug 'junegunn/fzf.vim'
-
-Plug 'nvim-lua/plenary.nvim'
-Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.2' }
-
 Plug 'catppuccin/nvim', { 'as': 'catppuccin' }
-
-Plug 'dense-analysis/ale'
-
-Plug 'https://github.com/tpope/vim-fugitive.git'
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 call plug#end()
 
@@ -44,20 +21,6 @@ set tabstop=4
 set shiftwidth=4
 set number
 
-nnoremap <leader>ff <cmd>Telescope find_files<cr>
-nnoremap <leader>fg <cmd>Telescope live_grep<cr>
-nnoremap <leader>fb <cmd>Telescope buffers<cr>
-nnoremap <leader>fh <cmd>Telescope help_tags<cr>
-nnoremap <leader>fr <cmd>Telescope lsp_references<cr>
-nnoremap <leader>fd <cmd>Telescope lsp_definitions<cr>
-
-nnoremap mn <cmd>Telescope lsp_definitions<cr><cmd>lua vim.lsp.buf.rename()<cr>
-
-" For local replace
-nnoremap gr gd[{V%::s/<C-R>///gc<left><left><left>
-" For global replace
-nnoremap gR gD:%s/<C-R>///gc<left><left><left>
-
 nnoremap H gT
 nnoremap L gt
 
@@ -65,129 +28,198 @@ nmap <F6> :NERDTreeToggle<CR>
 
 colorscheme catppuccin-mocha
 
-let g:ale_fix_on_save = 1
-let g:ale_sign_error = '>>'
-let g:ale_sign_warning = '--'
-let g:ale_echo_msg_error_str = 'E'
-let g:ale_echo_msg_warning_str = 'W'
-let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
-let g:ale_python_flake8_options = '--max-line-length 88 --extend-ignore=E203'
-
-" NOTE: You can use other key to expand snippet.
-
-" Expand
-imap <expr> <C-j>   vsnip#expandable()  ? '<Plug>(vsnip-expand)'         : '<C-j>'
-smap <expr> <C-j>   vsnip#expandable()  ? '<Plug>(vsnip-expand)'         : '<C-j>'
-
-" Expand or jump
-imap <expr> <C-l>   vsnip#available(1)  ? '<Plug>(vsnip-expand-or-jump)' : '<C-l>'
-smap <expr> <C-l>   vsnip#available(1)  ? '<Plug>(vsnip-expand-or-jump)' : '<C-l>'
-
-" Jump forward or backward
-imap <expr> <Tab>   vsnip#jumpable(1)   ? '<Plug>(vsnip-jump-next)'      : '<Tab>'
-smap <expr> <Tab>   vsnip#jumpable(1)   ? '<Plug>(vsnip-jump-next)'      : '<Tab>'
-imap <expr> <S-Tab> vsnip#jumpable(-1)  ? '<Plug>(vsnip-jump-prev)'      : '<S-Tab>'
-smap <expr> <S-Tab> vsnip#jumpable(-1)  ? '<Plug>(vsnip-jump-prev)'      : '<S-Tab>'
-
-" Select or cut text to use as $TM_SELECTED_TEXT in the next snippet.
-" See https://github.com/hrsh7th/vim-vsnip/pull/50
-nmap        s   <Plug>(vsnip-select-text)
-xmap        s   <Plug>(vsnip-select-text)
-nmap        S   <Plug>(vsnip-cut-text)
-xmap        S   <Plug>(vsnip-cut-text)
-
-" If you want to use snippet for multiple filetypes, you can `g:vsnip_filetypes` for it.
-" let g:vsnip_filetypes = {}
-" let g:vsnip_filetypes.javascriptreact = ['javascript']
-" let g:vsnip_filetypes.typescriptreact = ['typescript']
-
-let g:ale_linters = {
-    \ 'javascript': ['prettier', 'eslint'],
-	\ 'typescript': ['prettier', 'eslint'],
-	\}
-
-let g:ale_fixers = {
-  \ 'javascript': ['prettier', 'eslint'],
-  \ 'typescript': ['prettier', 'eslint'],
-\}
-
 let g:NERDTreeWinSize=60
+
+nmap <leader>ff <CMD>CocList files<cr>
+
+" ---------------------------------------------------------------------------------------------
 
 lua << EOF
 
-require('telescope').setup{ defaults = { file_ignore_patterns = {"node_modules"} } }
+-- Some servers have issues with backup files, see #649
+vim.opt.backup = false
+vim.opt.writebackup = false
 
-local lspconfig = require('lspconfig')
-lspconfig.tsserver.setup {}
-require'lspconfig'.angularls.setup{}
+-- Having longer updatetime (default is 4000 ms = 4s) leads to noticeable
+-- delays and poor user experience
+vim.opt.updatetime = 300
 
-local cmp = require'cmp'
+-- Always show the signcolumn, otherwise it would shift the text each time
+-- diagnostics appeared/became resolved
+vim.opt.signcolumn = "yes"
 
-  cmp.setup({
-    snippet = {
-      -- REQUIRED - you must specify a snippet engine
-      expand = function(args)
-        vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` users.
-        -- require('luasnip').lsp_expand(args.body) -- For `luasnip` users.
-        -- require('snippy').expand_snippet(args.body) -- For `snippy` users.
-        -- vim.fn["UltiSnips#Anon"](args.body) -- For `ultisnips` users.
-      end,
-    },
-    window = {
-      -- completion = cmp.config.window.bordered(),
-      -- documentation = cmp.config.window.bordered(),
-    },
-    mapping = cmp.mapping.preset.insert({
-      ['<C-b>'] = cmp.mapping.scroll_docs(-4),
-      ['<C-f>'] = cmp.mapping.scroll_docs(4),
-      ['<C-Space>'] = cmp.mapping.complete(),
-      ['<C-e>'] = cmp.mapping.abort(),
-      ['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
-    }),
-    sources = cmp.config.sources({
-      { name = 'nvim_lsp' },
-      -- { name = 'vsnip' }, -- For vsnip users.
-      { name = 'luasnip' }, -- For luasnip users.
-      -- { name = 'ultisnips' }, -- For ultisnips users.
-      -- { name = 'snippy' }, -- For snippy users.
-    }, {
-      { name = 'buffer' },
-    })
-  })
+local keyset = vim.keymap.set
+-- Autocomplete
+function _G.check_back_space()
+    local col = vim.fn.col('.') - 1
+    return col == 0 or vim.fn.getline('.'):sub(col, col):match('%s') ~= nil
+end
 
-  -- Set configuration for specific filetype.
-  cmp.setup.filetype('gitcommit', {
-    sources = cmp.config.sources({
-      { name = 'git' }, -- You can specify the `git` source if [you were installed it](https://github.com/petertriho/cmp-git).
-    }, {
-      { name = 'buffer' },
-    })
-  })
+-- Use Tab for trigger completion with characters ahead and navigate
+-- NOTE: There's always a completion item selected by default, you may want to enable
+-- no select by setting `"suggest.noselect": true` in your configuration file
+-- NOTE: Use command ':verbose imap <tab>' to make sure Tab is not mapped by
+-- other plugins before putting this into your config
+local opts = {silent = true, noremap = true, expr = true, replace_keycodes = false}
+keyset("i", "<TAB>", 'coc#pum#visible() ? coc#pum#next(1) : v:lua.check_back_space() ? "<TAB>" : coc#refresh()', opts)
+keyset("i", "<S-TAB>", [[coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"]], opts)
 
-  -- Use buffer source for `/` and `?` (if you enabled `native_menu`, this won't work anymore).
-  cmp.setup.cmdline({ '/', '?' }, {
-    mapping = cmp.mapping.preset.cmdline(),
-    sources = {
-      { name = 'buffer' }
-    }
-  })
+-- Make <CR> to accept selected completion item or notify coc.nvim to format
+-- <C-g>u breaks current undo, please make your own choice
+keyset("i", "<cr>", [[coc#pum#visible() ? coc#pum#confirm() : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"]], opts)
 
-  -- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
-  cmp.setup.cmdline(':', {
-    mapping = cmp.mapping.preset.cmdline(),
-    sources = cmp.config.sources({
-      { name = 'path' }
-    }, {
-      { name = 'cmdline' }
-    })
-  })
+-- Use <c-j> to trigger snippets	
+keyset("i", "<c-j>", "<Plug>(coc-snippets-expand-jump)")
+-- Use <c-space> to trigger completion
+keyset("i", "<c-space>", "coc#refresh()", {silent = true, expr = true})
 
-  -- Set up lspconfig.
-  local capabilities = require('cmp_nvim_lsp').default_capabilities()
-  -- Replace <YOUR_LSP_SERVER> with each lsp server you've enabled.
-  require('lspconfig')['tsserver'].setup {
-    capabilities = capabilities
-  }
+-- Use `[g` and `]g` to navigate diagnostics
+-- Use `:CocDiagnostics` to get all diagnostics of current buffer in location list
+keyset("n", "[g", "<Plug>(coc-diagnostic-prev)", {silent = true})
+keyset("n", "]g", "<Plug>(coc-diagnostic-next)", {silent = true})
 
+-- GoTo code navigation
+keyset("n", "gd", "<Plug>(coc-definition)", {silent = true})
+keyset("n", "gy", "<Plug>(coc-type-definition)", {silent = true})
+keyset("n", "gi", "<Plug>(coc-implementation)", {silent = true})
+keyset("n", "gR", "<Plug>(coc-references)", {silent = true})
+keyset("n", "gr", "<Plug>(coc-references-used)", {silent = true})
+
+
+-- Use K to show documentation in preview window
+function _G.show_docs()
+    local cw = vim.fn.expand('<cword>')
+    if vim.fn.index({'vim', 'help'}, vim.bo.filetype) >= 0 then
+        vim.api.nvim_command('h ' .. cw)
+    elseif vim.api.nvim_eval('coc#rpc#ready()') then
+        vim.fn.CocActionAsync('doHover')
+    else
+        vim.api.nvim_command('!' .. vim.o.keywordprg .. ' ' .. cw)
+    end
+end
+keyset("n", "K", '<CMD>lua _G.show_docs()<CR>', {silent = true})
+
+
+-- Highlight the symbol and its references on a CursorHold event(cursor is idle)
+vim.api.nvim_create_augroup("CocGroup", {})
+vim.api.nvim_create_autocmd("CursorHold", {
+    group = "CocGroup",
+    command = "silent call CocActionAsync('highlight')",
+    desc = "Highlight symbol under cursor on CursorHold"
+})
+
+
+-- Symbol renaming
+keyset("n", "<leader>rn", "<Plug>(coc-rename)", {silent = true})
+
+
+-- Formatting selected code
+keyset("x", "<leader>f", "<Plug>(coc-format-selected)", {silent = true})
+keyset("n", "<leader>f", "<Plug>(coc-format-selected)", {silent = true})
+
+
+-- Setup formatexpr specified filetype(s)
+vim.api.nvim_create_autocmd("FileType", {
+    group = "CocGroup",
+    pattern = "typescript,json",
+    command = "setl formatexpr=CocAction('formatSelected')",
+    desc = "Setup formatexpr specified filetype(s)."
+})
+
+-- Update signature help on jump placeholder
+vim.api.nvim_create_autocmd("User", {
+    group = "CocGroup",
+    pattern = "CocJumpPlaceholder",
+    command = "call CocActionAsync('showSignatureHelp')",
+    desc = "Update signature help on jump placeholder"
+})
+
+-- Apply codeAction to the selected region
+-- Example: `<leader>aap` for current paragraph
+local opts = {silent = true, nowait = true}
+keyset("x", "<leader>a", "<Plug>(coc-codeaction-selected)", opts)
+keyset("n", "<leader>a", "<Plug>(coc-codeaction-selected)", opts)
+
+-- Remap keys for apply code actions at the cursor position.
+keyset("n", "<leader>ac", "<Plug>(coc-codeaction-cursor)", opts)
+-- Remap keys for apply source code actions for current file.
+keyset("n", "<leader>as", "<Plug>(coc-codeaction-source)", opts)
+-- Apply the most preferred quickfix action on the current line.
+keyset("n", "<leader>qf", "<Plug>(coc-fix-current)", opts)
+
+-- Remap keys for apply refactor code actions.
+keyset("n", "<leader>re", "<Plug>(coc-codeaction-refactor)", { silent = true })
+keyset("x", "<leader>r", "<Plug>(coc-codeaction-refactor-selected)", { silent = true })
+keyset("n", "<leader>r", "<Plug>(coc-codeaction-refactor-selected)", { silent = true })
+
+-- Run the Code Lens actions on the current line
+keyset("n", "<leader>cl", "<Plug>(coc-codelens-action)", opts)
+
+
+-- Map function and class text objects
+-- NOTE: Requires 'textDocument.documentSymbol' support from the language server
+keyset("x", "if", "<Plug>(coc-funcobj-i)", opts)
+keyset("o", "if", "<Plug>(coc-funcobj-i)", opts)
+keyset("x", "af", "<Plug>(coc-funcobj-a)", opts)
+keyset("o", "af", "<Plug>(coc-funcobj-a)", opts)
+keyset("x", "ic", "<Plug>(coc-classobj-i)", opts)
+keyset("o", "ic", "<Plug>(coc-classobj-i)", opts)
+keyset("x", "ac", "<Plug>(coc-classobj-a)", opts)
+keyset("o", "ac", "<Plug>(coc-classobj-a)", opts)
+
+
+-- Remap <C-f> and <C-b> to scroll float windows/popups
+---@diagnostic disable-next-line: redefined-local
+local opts = {silent = true, nowait = true, expr = true}
+keyset("n", "<C-f>", 'coc#float#has_scroll() ? coc#float#scroll(1) : "<C-f>"', opts)
+keyset("n", "<C-b>", 'coc#float#has_scroll() ? coc#float#scroll(0) : "<C-b>"', opts)
+keyset("i", "<C-f>",
+       'coc#float#has_scroll() ? "<c-r>=coc#float#scroll(1)<cr>" : "<Right>"', opts)
+keyset("i", "<C-b>",
+       'coc#float#has_scroll() ? "<c-r>=coc#float#scroll(0)<cr>" : "<Left>"', opts)
+keyset("v", "<C-f>", 'coc#float#has_scroll() ? coc#float#scroll(1) : "<C-f>"', opts)
+keyset("v", "<C-b>", 'coc#float#has_scroll() ? coc#float#scroll(0) : "<C-b>"', opts)
+
+
+-- Use CTRL-S for selections ranges
+-- Requires 'textDocument/selectionRange' support of language server
+keyset("n", "<C-s>", "<Plug>(coc-range-select)", {silent = true})
+keyset("x", "<C-s>", "<Plug>(coc-range-select)", {silent = true})
+
+
+-- Add `:Format` command to format current buffer
+vim.api.nvim_create_user_command("Format", "call CocAction('format')", {})
+
+-- " Add `:Fold` command to fold current buffer
+vim.api.nvim_create_user_command("Fold", "call CocAction('fold', <f-args>)", {nargs = '?'})
+
+-- Add `:OR` command for organize imports of the current buffer
+vim.api.nvim_create_user_command("OR", "call CocActionAsync('runCommand', 'editor.action.organizeImport')", {})
+
+-- Add (Neo)Vim's native statusline support
+-- NOTE: Please see `:h coc-status` for integrations with external plugins that
+-- provide custom statusline: lightline.vim, vim-airline
+vim.opt.statusline:prepend("%{coc#status()}%{get(b:,'coc_current_function','')}")
+
+-- Mappings for CoCList
+-- code actions and coc stuff
+---@diagnostic disable-next-line: redefined-local
+local opts = {silent = true, nowait = true}
+-- Show all diagnostics
+keyset("n", "<space>a", ":<C-u>CocList diagnostics<cr>", opts)
+-- Manage extensions
+keyset("n", "<space>e", ":<C-u>CocList extensions<cr>", opts)
+-- Show commands
+keyset("n", "<space>c", ":<C-u>CocList commands<cr>", opts)
+-- Find symbol of current document
+keyset("n", "<space>o", ":<C-u>CocList outline<cr>", opts)
+-- Search workspace symbols
+keyset("n", "<space>s", ":<C-u>CocList -I symbols<cr>", opts)
+-- Do default action for next item
+keyset("n", "<space>j", ":<C-u>CocNext<cr>", opts)
+-- Do default action for previous item
+keyset("n", "<space>k", ":<C-u>CocPrev<cr>", opts)
+-- Resume latest coc list
+keyset("n", "<space>p", ":<C-u>CocListResume<cr>", opts)
 
 EOF
