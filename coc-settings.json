@@ -1,0 +1,6 @@
+{
+	"eslint.autoFixOnSave": true,
+	"eslint.alwaysShowStatus": true,
+	"typescript.format.insertSpaceAfterOpeningAndBeforeClosingEmptyBraces": true,
+	"coc.preferences.formatOnSave": true
+}
