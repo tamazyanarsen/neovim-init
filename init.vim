@@ -30,7 +30,7 @@ colorscheme catppuccin-mocha
 
 let g:NERDTreeWinSize=60
 
-nmap <leader>ff <CMD>CocList files<cr>
+nmap <leader>fg <CMD>CocList files<cr>
 
 " ---------------------------------------------------------------------------------------------
 
@@ -114,8 +114,9 @@ keyset("n", "<leader>rn", "<Plug>(coc-rename)", {silent = true})
 
 
 -- Formatting selected code
-keyset("x", "<leader>f", "<Plug>(coc-format-selected)", {silent = true})
-keyset("n", "<leader>f", "<Plug>(coc-format-selected)", {silent = true})
+keyset("x", "<leader>f", "<Plug>(coc-format)", {silent = true})
+keyset("x", "<leader>fs", "<Plug>(coc-format-selected)", {silent = true})
+keyset("n", "<leader>fs", "<Plug>(coc-format-selected)", {silent = true})
 
 
 -- Setup formatexpr specified filetype(s)
