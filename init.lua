@@ -27,6 +27,7 @@ require("lazy").setup({
   'nvim-tree/nvim-tree.lua',
   'nvim-tree/nvim-web-devicons',
   { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
+  require('plugins.nvim-treesitter'),
 }, {})
 
 require("nvim-tree").setup({
