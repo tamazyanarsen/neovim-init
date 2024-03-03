@@ -3,5 +3,15 @@
 	"eslint.alwaysShowStatus": true,
 	"typescript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces": true,
 	"coc.preferences.formatOnSave": true,
-	"snippets.ultisnips.pythonPrompt": false
+	"snippets.ultisnips.pythonPrompt": false,
+	"languageserver": {
+  		"go": {
+	    	"command": "gopls",
+    		"rootPatterns": ["go.work", "go.mod", ".vim/", ".git/", ".hg/"],
+	    	"filetypes": ["go"],
+	    	"initializationOptions": {
+    			"usePlaceholders": true
+			}
+		}
+	}
 }
