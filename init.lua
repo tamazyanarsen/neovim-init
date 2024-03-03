@@ -29,7 +29,10 @@ require("lazy").setup({
   'nvim-tree/nvim-web-devicons',
   { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
   require('plugins.nvim-treesitter'),
+	"williamboman/mason.nvim",
 }, {})
+
+require("mason").setup()
 
 require("nvim-tree").setup({
   sort = {

@@ -5,12 +5,20 @@
 	"coc.preferences.formatOnSave": true,
 	"snippets.ultisnips.pythonPrompt": false,
 	"languageserver": {
-  		"go": {
-	    	"command": "gopls",
-    		"rootPatterns": ["go.work", "go.mod", ".vim/", ".git/", ".hg/"],
-	    	"filetypes": ["go"],
-	    	"initializationOptions": {
-    			"usePlaceholders": true
+		"go": {
+			"command": "gopls",
+			"rootPatterns": [
+				"go.work",
+				"go.mod",
+				".vim/",
+				".git/",
+				".hg/"
+			],
+			"filetypes": [
+				"go"
+			],
+			"initializationOptions": {
+				"usePlaceholders": true
 			}
 		}
 	}
