@@ -30,9 +30,13 @@ require("lazy").setup({
   { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
   require('plugins.nvim-treesitter'),
 	"williamboman/mason.nvim",
+	require("plugins.which-key"),
+	{'akinsho/bufferline.nvim', version = "*", dependencies = 'nvim-tree/nvim-web-devicons'},
+	require('plugins.noice-install'),
 }, {})
 
 require("mason").setup()
+require('plugins.noice')
 
 require("nvim-tree").setup({
   sort = {
